@@ -1,9 +1,10 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useMemo, useCallback } from 'react';
 
 interface CreditCalculatorProps {
   dict: {
+    currency: string;
     amount: string;
     amountPlaceholder: string;
     rate: string;
@@ -27,6 +28,13 @@ interface CreditCalculatorProps {
     originationFeePlaceholder: string;
     insurance: string;
     insurancePlaceholder: string;
+    tooltipRate: string;
+    tooltipTerm: string;
+    tooltipFrequency: string;
+    tooltipDownPayment: string;
+    tooltipFee: string;
+    tooltipInsurance: string;
+    tooltipExtraPayment: string;
     results: string;
     payment: string;
     totalInterest: string;
@@ -66,7 +74,47 @@ type TermUnit = 'months' | 'years';
 type PaymentFrequency = 'monthly' | 'biweekly' | 'weekly';
 type CalculationMode = 'payment' | 'maxAmount';
 
+const CURRENCIES = {
+  USD: { symbol: '$', name: 'US Dollar' },
+  EUR: { symbol: '€', name: 'Euro' },
+  GBP: { symbol: '£', name: 'British Pound' },
+  MXN: { symbol: '$', name: 'Mexican Peso' },
+  COP: { symbol: '$', name: 'Colombian Peso' },
+  ARS: { symbol: '$', name: 'Argentine Peso' },
+  BRL: { symbol: 'R$', name: 'Brazilian Real' },
+  CLP: { symbol: '$', name: 'Chilean Peso' },
+} as const;
+
+type CurrencyCode = keyof typeof CURRENCIES;
+
+// Tooltip component
+function Tooltip({ text }: { text: string }) {
+  const [show, setShow] = useState(false);
+
+  return (
+    <div className="relative inline-block ml-1">
+      <button
+        type="button"
+        onMouseEnter={() => setShow(true)}
+        onMouseLeave={() => setShow(false)}
+        onFocus={() => setShow(true)}
+        onBlur={() => setShow(false)}
+        className="inline-flex items-center justify-center w-4 h-4 text-xs font-bold text-white bg-gray-400 hover:bg-gray-500 rounded-full cursor-help transition-colors"
+        aria-label="More information"
+      >
+        ?
+      </button>
+      {show && (
+        <div className="absolute z-50 w-64 p-3 text-sm text-gray-700 bg-white border border-gray-200 rounded-lg shadow-lg left-0 bottom-6 sm:left-auto sm:right-0">
+          {text}
+        </div>
+      )}
+    </div>
+  );
+}
+
 export default function CreditCalculator({ dict }: CreditCalculatorProps) {
+  const [currency, setCurrency] = useState<CurrencyCode>('USD');
   const [amount, setAmount] = useState('');
   const [desiredPayment, setDesiredPayment] = useState('');
   const [rate, setRate] = useState('');
@@ -315,14 +363,16 @@ export default function CreditCalculator({ dict }: CreditCalculatorProps) {
     });
   };
 
-  const formatCurrency = (value: number) => {
+  const currencySymbol = useMemo(() => CURRENCIES[currency].symbol, [currency]);
+
+  const formatCurrency = useCallback((value: number) => {
     return new Intl.NumberFormat('en-US', {
       style: 'currency',
-      currency: 'USD',
+      currency: currency,
       minimumFractionDigits: 2,
       maximumFractionDigits: 2,
     }).format(value);
-  };
+  }, [currency]);
 
   const downloadCSV = () => {
     if (!results) return;
@@ -408,6 +458,24 @@ export default function CreditCalculator({ dict }: CreditCalculatorProps) {
   return (
     <div className="w-full">
       <div className="card p-4 sm:p-6 lg:p-8">
+        {/* Currency Selector */}
+        <div className="mb-6">
+          <label className="block text-sm font-medium text-gray-700 mb-2">
+            {dict.currency}
+          </label>
+          <select
+            value={currency}
+            onChange={(e) => setCurrency(e.target.value as CurrencyCode)}
+            className="input-field max-w-xs"
+          >
+            {Object.entries(CURRENCIES).map(([code, { symbol, name }]) => (
+              <option key={code} value={code}>
+                {symbol} {name} ({code})
+              </option>
+            ))}
+          </select>
+        </div>
+
         {/* Calculation Mode */}
         <div className="mb-6">
           <label className="block text-sm font-medium text-gray-700 mb-3">
@@ -443,7 +511,7 @@ export default function CreditCalculator({ dict }: CreditCalculatorProps) {
                 {dict.amount}
               </label>
               <div className="relative">
-                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 font-medium pointer-events-none z-10">$</span>
+                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 font-medium pointer-events-none z-10">{currencySymbol}</span>
                 <input
                   type="text"
                   inputMode="decimal"
@@ -460,7 +528,7 @@ export default function CreditCalculator({ dict }: CreditCalculatorProps) {
                 {dict.payment}
               </label>
               <div className="relative">
-                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 font-medium pointer-events-none z-10">$</span>
+                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 font-medium pointer-events-none z-10">{currencySymbol}</span>
                 <input
                   type="text"
                   inputMode="decimal"
@@ -477,6 +545,7 @@ export default function CreditCalculator({ dict }: CreditCalculatorProps) {
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
               {dict.rate}
+              <Tooltip text={dict.tooltipRate} />
             </label>
             <div className="relative">
               <input
@@ -495,6 +564,7 @@ export default function CreditCalculator({ dict }: CreditCalculatorProps) {
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
               {dict.term}
+              <Tooltip text={dict.tooltipTerm} />
             </label>
             <div className="flex gap-2">
               <div className="flex-1">
@@ -524,6 +594,7 @@ export default function CreditCalculator({ dict }: CreditCalculatorProps) {
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
               {dict.frequency}
+              <Tooltip text={dict.tooltipFrequency} />
             </label>
             <select
               value={frequency}
@@ -560,9 +631,10 @@ export default function CreditCalculator({ dict }: CreditCalculatorProps) {
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
                     {dict.downPayment}
+                    <Tooltip text={dict.tooltipDownPayment} />
                   </label>
                   <div className="relative">
-                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 font-medium pointer-events-none z-10">$</span>
+                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 font-medium pointer-events-none z-10">{currencySymbol}</span>
                     <input
                       type="text"
                       inputMode="decimal"
@@ -577,9 +649,10 @@ export default function CreditCalculator({ dict }: CreditCalculatorProps) {
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
                     {dict.originationFee}
+                    <Tooltip text={dict.tooltipFee} />
                   </label>
                   <div className="relative">
-                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 font-medium pointer-events-none z-10">$</span>
+                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 font-medium pointer-events-none z-10">{currencySymbol}</span>
                     <input
                       type="text"
                       inputMode="decimal"
@@ -594,9 +667,10 @@ export default function CreditCalculator({ dict }: CreditCalculatorProps) {
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
                     {dict.insurance}
+                    <Tooltip text={dict.tooltipInsurance} />
                   </label>
                   <div className="relative">
-                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 font-medium pointer-events-none z-10">$</span>
+                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 font-medium pointer-events-none z-10">{currencySymbol}</span>
                     <input
                       type="text"
                       inputMode="decimal"
@@ -614,9 +688,10 @@ export default function CreditCalculator({ dict }: CreditCalculatorProps) {
                 <div className="max-w-md">
                   <label className="block text-sm font-medium text-gray-700 mb-2">
                     {dict.extraPayment}
+                    <Tooltip text={dict.tooltipExtraPayment} />
                   </label>
                   <div className="relative">
-                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 font-medium pointer-events-none z-10">$</span>
+                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 font-medium pointer-events-none z-10">{currencySymbol}</span>
                     <input
                       type="text"
                       inputMode="decimal"

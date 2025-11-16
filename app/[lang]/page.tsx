@@ -56,6 +56,16 @@ export default async function Page({ params }: { params: Promise<{ lang: string 
         </div>
       </section>
 
+      {/* AD PLACEHOLDER #1 - In-content ad before calculator */}
+      {/* Recommended: 728x90 leaderboard on desktop, 320x100 on mobile */}
+      {/* <div className="container-custom py-4">
+        <div className="flex justify-center">
+          <div className="bg-gray-100 border-2 border-dashed border-gray-300 rounded-lg p-4 text-center text-gray-400">
+            Ad Space: 728x90 (Desktop) / 320x100 (Mobile)
+          </div>
+        </div>
+      </div> */}
+
       {/* Calculator Section */}
       <section className="container-custom py-8">
         <CreditCalculator dict={dict.calculator} />
@@ -103,6 +113,16 @@ export default async function Page({ params }: { params: Promise<{ lang: string 
           </div>
         </div>
       </section>
+
+      {/* AD PLACEHOLDER #2 - Between "How to Use" and "Features" */}
+      {/* Recommended: 336x280 medium rectangle or 300x250 */}
+      {/* <div className="container-custom py-8">
+        <div className="flex justify-center">
+          <div className="bg-gray-100 border-2 border-dashed border-gray-300 rounded-lg p-4 text-center text-gray-400 w-full max-w-md">
+            Ad Space: 336x280 / 300x250
+          </div>
+        </div>
+      </div> */}
 
       {/* Features Section */}
       <section className="container-custom py-16">
@@ -258,6 +278,16 @@ export default async function Page({ params }: { params: Promise<{ lang: string 
           </div>
         </div>
       </section>
+
+      {/* AD PLACEHOLDER #3 - After FAQs, before footer */}
+      {/* Recommended: 728x90 leaderboard */}
+      {/* <div className="container-custom py-8">
+        <div className="flex justify-center">
+          <div className="bg-gray-100 border-2 border-dashed border-gray-300 rounded-lg p-4 text-center text-gray-400">
+            Ad Space: 728x90 Leaderboard
+          </div>
+        </div>
+      </div> */}
 
       {/* Footer */}
       <footer className="container-custom py-12 border-t border-gray-200">
