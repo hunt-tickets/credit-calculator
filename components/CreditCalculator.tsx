@@ -300,22 +300,26 @@ export default function CreditCalculator({ dict }: CreditCalculatorProps) {
               {dict.term}
             </label>
             <div className="flex gap-2">
-              <input
-                type="text"
-                inputMode="numeric"
-                value={term}
-                onChange={(e) => setTerm(e.target.value)}
-                placeholder={dict.termPlaceholder}
-                className="input-field flex-1 min-w-0"
-              />
-              <select
-                value={termUnit}
-                onChange={(e) => setTermUnit(e.target.value as TermUnit)}
-                className="input-field w-24 sm:w-32 flex-shrink-0"
-              >
-                <option value="months">{dict.termMonths}</option>
-                <option value="years">{dict.termYears}</option>
-              </select>
+              <div className="flex-1">
+                <input
+                  type="text"
+                  inputMode="numeric"
+                  value={term}
+                  onChange={(e) => setTerm(e.target.value)}
+                  placeholder={dict.termPlaceholder}
+                  className="input-field"
+                />
+              </div>
+              <div className="flex-shrink-0" style={{ width: '100px' }}>
+                <select
+                  value={termUnit}
+                  onChange={(e) => setTermUnit(e.target.value as TermUnit)}
+                  className="input-field"
+                >
+                  <option value="months">{dict.termMonths}</option>
+                  <option value="years">{dict.termYears}</option>
+                </select>
+              </div>
             </div>
           </div>
 
