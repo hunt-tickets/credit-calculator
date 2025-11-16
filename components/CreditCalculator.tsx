@@ -245,30 +245,34 @@ export default function CreditCalculator({ dict }: CreditCalculatorProps) {
               <label className="block text-sm font-medium text-gray-700 mb-2">
                 {dict.amount}
               </label>
-              <input
-                type="number"
-                value={amount}
-                onChange={(e) => setAmount(e.target.value)}
-                placeholder={dict.amountPlaceholder}
-                className="input-field"
-                min="0"
-                step="1000"
-              />
+              <div className="relative">
+                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 font-medium">$</span>
+                <input
+                  type="text"
+                  inputMode="decimal"
+                  value={amount}
+                  onChange={(e) => setAmount(e.target.value)}
+                  placeholder={dict.amountPlaceholder}
+                  className="input-field pl-8"
+                />
+              </div>
             </div>
           ) : (
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
                 {dict.payment}
               </label>
-              <input
-                type="number"
-                value={desiredPayment}
-                onChange={(e) => setDesiredPayment(e.target.value)}
-                placeholder={dict.amountPlaceholder}
-                className="input-field"
-                min="0"
-                step="100"
-              />
+              <div className="relative">
+                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 font-medium">$</span>
+                <input
+                  type="text"
+                  inputMode="decimal"
+                  value={desiredPayment}
+                  onChange={(e) => setDesiredPayment(e.target.value)}
+                  placeholder={dict.amountPlaceholder}
+                  className="input-field pl-8"
+                />
+              </div>
             </div>
           )}
 
@@ -277,15 +281,17 @@ export default function CreditCalculator({ dict }: CreditCalculatorProps) {
             <label className="block text-sm font-medium text-gray-700 mb-2">
               {dict.rate}
             </label>
-            <input
-              type="number"
-              value={rate}
-              onChange={(e) => setRate(e.target.value)}
-              placeholder={dict.ratePlaceholder}
-              className="input-field"
-              min="0"
-              step="0.1"
-            />
+            <div className="relative">
+              <input
+                type="text"
+                inputMode="decimal"
+                value={rate}
+                onChange={(e) => setRate(e.target.value)}
+                placeholder={dict.ratePlaceholder}
+                className="input-field pr-8"
+              />
+              <span className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 font-medium">%</span>
+            </div>
           </div>
 
           {/* Loan Term with Unit Selector */}
@@ -295,13 +301,12 @@ export default function CreditCalculator({ dict }: CreditCalculatorProps) {
             </label>
             <div className="flex gap-2">
               <input
-                type="number"
+                type="text"
+                inputMode="numeric"
                 value={term}
                 onChange={(e) => setTerm(e.target.value)}
                 placeholder={dict.termPlaceholder}
                 className="input-field flex-1 min-w-0"
-                min="1"
-                step="1"
               />
               <select
                 value={termUnit}
@@ -354,45 +359,51 @@ export default function CreditCalculator({ dict }: CreditCalculatorProps) {
                 <label className="block text-sm font-medium text-gray-700 mb-2">
                   {dict.downPayment}
                 </label>
-                <input
-                  type="number"
-                  value={downPayment}
-                  onChange={(e) => setDownPayment(e.target.value)}
-                  placeholder={dict.downPaymentPlaceholder}
-                  className="input-field"
-                  min="0"
-                  step="1000"
-                />
+                <div className="relative">
+                  <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 font-medium">$</span>
+                  <input
+                    type="text"
+                    inputMode="decimal"
+                    value={downPayment}
+                    onChange={(e) => setDownPayment(e.target.value)}
+                    placeholder={dict.downPaymentPlaceholder}
+                    className="input-field pl-8"
+                  />
+                </div>
               </div>
 
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
                   {dict.originationFee}
                 </label>
-                <input
-                  type="number"
-                  value={originationFee}
-                  onChange={(e) => setOriginationFee(e.target.value)}
-                  placeholder={dict.originationFeePlaceholder}
-                  className="input-field"
-                  min="0"
-                  step="100"
-                />
+                <div className="relative">
+                  <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 font-medium">$</span>
+                  <input
+                    type="text"
+                    inputMode="decimal"
+                    value={originationFee}
+                    onChange={(e) => setOriginationFee(e.target.value)}
+                    placeholder={dict.originationFeePlaceholder}
+                    className="input-field pl-8"
+                  />
+                </div>
               </div>
 
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
                   {dict.insurance}
                 </label>
-                <input
-                  type="number"
-                  value={insurance}
-                  onChange={(e) => setInsurance(e.target.value)}
-                  placeholder={dict.insurancePlaceholder}
-                  className="input-field"
-                  min="0"
-                  step="10"
-                />
+                <div className="relative">
+                  <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 font-medium">$</span>
+                  <input
+                    type="text"
+                    inputMode="decimal"
+                    value={insurance}
+                    onChange={(e) => setInsurance(e.target.value)}
+                    placeholder={dict.insurancePlaceholder}
+                    className="input-field pl-8"
+                  />
+                </div>
               </div>
             </div>
           )}
