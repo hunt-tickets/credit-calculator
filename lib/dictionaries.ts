@@ -3,12 +3,12 @@ import type { Locale } from './i18n';
 const dictionaries = {
   en: {
     meta: {
-      title: 'Credit Calculator - Free Online Loan & Mortgage Simulator',
+      title: 'Credit Calculator | Loan Payment & Amortization Schedule',
       description: 'Calculate your loan payments instantly with our free credit calculator. Estimate monthly payments, total interest, and amortization schedules for mortgages, auto loans, and personal loans.',
       keywords: 'credit calculator, loan calculator, mortgage calculator, payment calculator, amortization calculator, interest calculator, free loan calculator',
     },
     hero: {
-      title: 'Credit Calculator',
+      title: 'Credit Calculator – Loan Payment & Amortization Schedule',
       subtitle: 'Calculate your loan payments instantly and plan your finances with confidence',
       description: 'Free online tool to simulate personal loans, mortgages, and credits with detailed amortization tables.',
     },
@@ -55,6 +55,18 @@ const dictionaries = {
       balance: 'Balance',
       showSchedule: 'Show Amortization Schedule',
       hideSchedule: 'Hide Amortization Schedule',
+      summary: 'Results Summary',
+      effectiveRate: 'Effective Rate (incl. fees)',
+      extraPayment: 'Extra Monthly Payment (Optional)',
+      extraPaymentPlaceholder: 'Optional extra payment',
+      whatIfScenario: '"What If" Scenario',
+      withExtraPayment: 'With Extra Payment',
+      payoffTime: 'Payoff Time',
+      monthsEarlier: 'months earlier',
+      interestSaved: 'Interest Saved',
+      downloadPDF: 'Download as PDF',
+      downloadCSV: 'Download as CSV',
+      totalPaid: 'Total Paid',
     },
     features: {
       title: 'Why Use Our Credit Calculator?',
@@ -73,6 +85,16 @@ const dictionaries = {
       accurate: {
         title: 'Accurate Calculations',
         description: 'Calculations based on standard loan amortization formulas.',
+      },
+    },
+    seo: {
+      whatIs: {
+        title: 'What Is a Loan Payment Calculator?',
+        content: 'A loan payment calculator is a financial tool that helps you estimate your monthly payments for various types of loans including personal loans, mortgages, auto loans, and business financing. Our credit calculator uses standard amortization formulas to calculate how much you\'ll pay each month, the total interest cost over the life of the loan, and provides a detailed payment schedule showing how each payment is split between principal and interest. Whether you\'re planning for a mortgage loan calculator scenario, an auto loan, or a personal loan calculator calculation, this tool gives you accurate estimates to help with your financial planning.',
+      },
+      whoCanUse: {
+        title: 'Who Can Use This Credit Calculator?',
+        content: 'This loan calculator is perfect for anyone considering taking out a loan or credit. Homebuyers can use it as a mortgage calculator to estimate monthly payments for home loans. Car shoppers can calculate auto loan payments and compare different financing options. Small business owners can estimate business loan costs. Students can plan student loan repayment strategies. Personal loan applicants can compare offers from different lenders. Financial advisors can use it to demonstrate loan scenarios to clients. The calculator works for any fixed-rate installment loan, making it a versatile personal loan simulator for various credit needs.',
       },
     },
     faq: {
@@ -101,12 +123,12 @@ const dictionaries = {
   },
   es: {
     meta: {
-      title: 'Calculadora de Crédito - Simulador Gratuito de Préstamos e Hipotecas',
+      title: 'Calculadora de Crédito | Simulador de Préstamos y Tabla de Amortización',
       description: 'Calcula tus pagos de préstamo al instante con nuestra calculadora de crédito gratuita. Estima pagos mensuales, intereses totales y tablas de amortización para hipotecas, préstamos de auto y préstamos personales.',
       keywords: 'calculadora de crédito, calculadora de préstamos, calculadora de hipoteca, calculadora de pagos, calculadora de amortización, calculadora de intereses, calculadora de préstamos gratis',
     },
     hero: {
-      title: 'Calculadora de Crédito',
+      title: 'Calculadora de Crédito – Simulador de Préstamos y Tabla de Amortización',
       subtitle: 'Calcula tus pagos de préstamo al instante y planifica tus finanzas con confianza',
       description: 'Herramienta gratuita en línea para simular préstamos personales, créditos e hipotecas con tablas de amortización detalladas.',
     },
@@ -153,6 +175,18 @@ const dictionaries = {
       balance: 'Saldo',
       showSchedule: 'Mostrar Tabla de Amortización',
       hideSchedule: 'Ocultar Tabla de Amortización',
+      summary: 'Resumen de Resultados',
+      effectiveRate: 'Tasa Efectiva (incl. comisiones)',
+      extraPayment: 'Pago Extra Mensual (Opcional)',
+      extraPaymentPlaceholder: 'Pago extra opcional',
+      whatIfScenario: 'Escenario "Qué Pasaría Si"',
+      withExtraPayment: 'Con Pago Extra',
+      payoffTime: 'Tiempo de Pago',
+      monthsEarlier: 'meses antes',
+      interestSaved: 'Interés Ahorrado',
+      downloadPDF: 'Descargar como PDF',
+      downloadCSV: 'Descargar como CSV',
+      totalPaid: 'Total Pagado',
     },
     features: {
       title: '¿Por Qué Usar Nuestra Calculadora de Crédito?',
@@ -171,6 +205,16 @@ const dictionaries = {
       accurate: {
         title: 'Cálculos Precisos',
         description: 'Cálculos basados en fórmulas estándar de amortización de préstamos.',
+      },
+    },
+    seo: {
+      whatIs: {
+        title: '¿Qué es una Calculadora de Préstamos?',
+        content: 'Una calculadora de préstamos es una herramienta financiera que te ayuda a estimar tus pagos mensuales para varios tipos de créditos incluyendo préstamos personales, hipotecas, préstamos de auto y financiamiento empresarial. Nuestra calculadora de crédito usa fórmulas estándar de amortización para calcular cuánto pagarás cada mes, el costo total de intereses durante la vida del préstamo, y proporciona un cronograma detallado de pagos mostrando cómo cada pago se divide entre capital e interés. Ya sea que estés planeando un escenario de calculadora de hipoteca, un préstamo de auto, o un cálculo de simulador de préstamos personales, esta herramienta te da estimaciones precisas para ayudar con tu planificación financiera.',
+      },
+      whoCanUse: {
+        title: '¿Quién Puede Usar Esta Calculadora de Crédito?',
+        content: 'Esta calculadora de préstamos es perfecta para cualquier persona que esté considerando obtener un préstamo o crédito. Los compradores de vivienda pueden usarla como calculadora de hipoteca para estimar pagos mensuales de préstamos hipotecarios. Los compradores de autos pueden calcular pagos de préstamos de auto y comparar diferentes opciones de financiamiento. Los dueños de pequeñas empresas pueden estimar costos de préstamos comerciales. Los estudiantes pueden planificar estrategias de pago de préstamos estudiantiles. Los solicitantes de préstamos personales pueden comparar ofertas de diferentes prestamistas. Los asesores financieros pueden usarla para demostrar escenarios de préstamos a clientes. La calculadora funciona para cualquier préstamo a plazo fijo con tasa de interés fija, convirtiéndola en un simulador de préstamos personales versátil para diversas necesidades crediticias.',
       },
     },
     faq: {

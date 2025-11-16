@@ -200,6 +200,29 @@ export default async function Page({ params }: { params: Promise<{ lang: string 
         </div>
       </section>
 
+      {/* SEO Content Sections */}
+      <section className="container-custom py-16 bg-white">
+        <div className="max-w-4xl mx-auto space-y-12">
+          <div>
+            <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-6">
+              {dict.seo.whatIs.title}
+            </h2>
+            <p className="text-lg text-gray-700 leading-relaxed">
+              {dict.seo.whatIs.content}
+            </p>
+          </div>
+
+          <div>
+            <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-6">
+              {dict.seo.whoCanUse.title}
+            </h2>
+            <p className="text-lg text-gray-700 leading-relaxed">
+              {dict.seo.whoCanUse.content}
+            </p>
+          </div>
+        </div>
+      </section>
+
       {/* FAQ Section */}
       <section className="container-custom py-16">
         <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 text-center mb-12">
@@ -245,6 +268,73 @@ export default async function Page({ params }: { params: Promise<{ lang: string 
           </p>
         </div>
       </footer>
+
+      {/* Schema.org Structured Data */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            '@context': 'https://schema.org',
+            '@graph': [
+              {
+                '@type': 'WebApplication',
+                name: dict.hero.title,
+                description: dict.meta.description,
+                url: `https://creditcalculator.com/${lang}`,
+                applicationCategory: 'FinanceApplication',
+                offers: {
+                  '@type': 'Offer',
+                  price: '0',
+                  priceCurrency: 'USD',
+                },
+                featureList: [
+                  dict.features.instant.title,
+                  dict.features.detailed.title,
+                  dict.features.free.title,
+                  dict.features.accurate.title,
+                ],
+              },
+              {
+                '@type': 'FAQPage',
+                mainEntity: [
+                  {
+                    '@type': 'Question',
+                    name: dict.faq.q1.question,
+                    acceptedAnswer: {
+                      '@type': 'Answer',
+                      text: dict.faq.q1.answer,
+                    },
+                  },
+                  {
+                    '@type': 'Question',
+                    name: dict.faq.q2.question,
+                    acceptedAnswer: {
+                      '@type': 'Answer',
+                      text: dict.faq.q2.answer,
+                    },
+                  },
+                  {
+                    '@type': 'Question',
+                    name: dict.faq.q3.question,
+                    acceptedAnswer: {
+                      '@type': 'Answer',
+                      text: dict.faq.q3.answer,
+                    },
+                  },
+                  {
+                    '@type': 'Question',
+                    name: dict.faq.q4.question,
+                    acceptedAnswer: {
+                      '@type': 'Answer',
+                      text: dict.faq.q4.answer,
+                    },
+                  },
+                ],
+              },
+            ],
+          }),
+        }}
+      />
     </main>
   );
 }
