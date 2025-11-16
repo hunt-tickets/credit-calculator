@@ -65,6 +65,14 @@ body {
   transition-property: all;
   transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
   transition-duration: 200ms;
+  font-size: 16px; /* Prevents zoom on iOS */
+  touch-action: manipulation;
+}
+
+@media (min-width: 640px) {
+  .input-field {
+    font-size: 1rem;
+  }
 }
 
 .input-field:focus {
@@ -92,4 +100,21 @@ body {
   background: linear-gradient(to right, var(--color-primary-700), var(--color-primary-800));
   transform: scale(1.05);
   box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+}
+
+.btn-primary:active {
+  transform: scale(0.98);
+}
+
+/* Touch optimization */
+.touch-manipulation {
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Sticky table header fix for mobile */
+@media (max-width: 640px) {
+  .sticky {
+    position: sticky;
+  }
 }
