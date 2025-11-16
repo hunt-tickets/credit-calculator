@@ -10,14 +10,30 @@ interface CreditCalculatorProps {
     ratePlaceholder: string;
     term: string;
     termPlaceholder: string;
+    termMonths: string;
+    termYears: string;
+    frequency: string;
+    monthly: string;
+    biweekly: string;
+    weekly: string;
+    calculationMode: string;
+    calculatePayment: string;
+    calculateMaxAmount: string;
     calculate: string;
+    advancedOptions: string;
+    downPayment: string;
+    downPaymentPlaceholder: string;
+    originationFee: string;
+    originationFeePlaceholder: string;
+    insurance: string;
+    insurancePlaceholder: string;
     results: string;
-    monthlyPayment: string;
+    payment: string;
     totalInterest: string;
     totalAmount: string;
+    maxLoanAmount: string;
     amortization: string;
-    month: string;
-    payment: string;
+    period: string;
     principal: string;
     interest: string;
     balance: string;
@@ -27,70 +43,158 @@ interface CreditCalculatorProps {
 }
 
 interface AmortizationRow {
-  month: number;
+  period: number;
   payment: number;
   principal: number;
   interest: number;
   balance: number;
 }
 
+type TermUnit = 'months' | 'years';
+type PaymentFrequency = 'monthly' | 'biweekly' | 'weekly';
+type CalculationMode = 'payment' | 'maxAmount';
+
 export default function CreditCalculator({ dict }: CreditCalculatorProps) {
   const [amount, setAmount] = useState('');
+  const [desiredPayment, setDesiredPayment] = useState('');
   const [rate, setRate] = useState('');
   const [term, setTerm] = useState('');
+  const [termUnit, setTermUnit] = useState<TermUnit>('months');
+  const [frequency, setFrequency] = useState<PaymentFrequency>('monthly');
+  const [calculationMode, setCalculationMode] = useState<CalculationMode>('payment');
+
+  // Advanced options
+  const [showAdvanced, setShowAdvanced] = useState(false);
+  const [downPayment, setDownPayment] = useState('');
+  const [originationFee, setOriginationFee] = useState('');
+  const [insurance, setInsurance] = useState('');
+
   const [results, setResults] = useState<{
-    monthlyPayment: number;
+    payment: number;
     totalInterest: number;
     totalAmount: number;
+    maxLoanAmount?: number;
     schedule: AmortizationRow[];
   } | null>(null);
   const [showSchedule, setShowSchedule] = useState(false);
 
   const calculateLoan = () => {
-    const principal = parseFloat(amount);
+    // Parse inputs
+    let loanAmount = parseFloat(amount);
+    const desiredPmt = parseFloat(desiredPayment);
     const annualRate = parseFloat(rate);
-    const months = parseInt(term);
+    let termValue = parseInt(term);
+    const down = parseFloat(downPayment) || 0;
+    const fee = parseFloat(originationFee) || 0;
+    const monthlyInsurance = parseFloat(insurance) || 0;
 
-    if (isNaN(principal) || isNaN(annualRate) || isNaN(months) || principal <= 0 || annualRate < 0 || months <= 0) {
+    // Validate basic inputs
+    if (isNaN(annualRate) || annualRate < 0 || isNaN(termValue) || termValue <= 0) {
       return;
     }
 
-    // Calculate monthly interest rate
-    const monthlyRate = annualRate / 100 / 12;
-
-    // Calculate monthly payment using amortization formula
-    let monthlyPayment: number;
-    if (monthlyRate === 0) {
-      monthlyPayment = principal / months;
-    } else {
-      monthlyPayment = principal * (monthlyRate * Math.pow(1 + monthlyRate, months)) / (Math.pow(1 + monthlyRate, months) - 1);
+    if (calculationMode === 'payment' && (isNaN(loanAmount) || loanAmount <= 0)) {
+      return;
     }
 
-    const totalAmount = monthlyPayment * months;
-    const totalInterest = totalAmount - principal;
+    if (calculationMode === 'maxAmount' && (isNaN(desiredPmt) || desiredPmt <= 0)) {
+      return;
+    }
+
+    // Convert term to months
+    const termInMonths = termUnit === 'years' ? termValue * 12 : termValue;
+
+    // Get payment frequency factor
+    let paymentsPerYear: number;
+    let periodLabel: string;
+    switch (frequency) {
+      case 'weekly':
+        paymentsPerYear = 52;
+        periodLabel = 'week';
+        break;
+      case 'biweekly':
+        paymentsPerYear = 26;
+        periodLabel = 'biweek';
+        break;
+      case 'monthly':
+      default:
+        paymentsPerYear = 12;
+        periodLabel = 'month';
+        break;
+    }
+
+    // Calculate period interest rate
+    const periodRate = annualRate / 100 / paymentsPerYear;
+    const totalPeriods = Math.round((termInMonths / 12) * paymentsPerYear);
+
+    let payment: number;
+    let calculatedMaxAmount: number | undefined;
+
+    if (calculationMode === 'payment') {
+      // Standard calculation: calculate payment from loan amount
+      const netLoanAmount = loanAmount - down + fee;
+
+      // Calculate base payment using amortization formula
+      if (periodRate === 0) {
+        payment = netLoanAmount / totalPeriods;
+      } else {
+        payment = netLoanAmount * (periodRate * Math.pow(1 + periodRate, totalPeriods)) / (Math.pow(1 + periodRate, totalPeriods) - 1);
+      }
+
+      // Add insurance to payment
+      const insurancePerPeriod = monthlyInsurance * (12 / paymentsPerYear);
+      payment += insurancePerPeriod;
+
+      loanAmount = netLoanAmount;
+    } else {
+      // Reverse calculation: calculate max loan amount from desired payment
+      const insurancePerPeriod = monthlyInsurance * (12 / paymentsPerYear);
+      const availableForPrincipal = desiredPmt - insurancePerPeriod;
+
+      if (availableForPrincipal <= 0) {
+        return; // Insurance eats all the payment
+      }
+
+      // Calculate max loan using reverse formula
+      if (periodRate === 0) {
+        loanAmount = availableForPrincipal * totalPeriods;
+      } else {
+        loanAmount = availableForPrincipal * (Math.pow(1 + periodRate, totalPeriods) - 1) / (periodRate * Math.pow(1 + periodRate, totalPeriods));
+      }
+
+      // Account for down payment and fees
+      calculatedMaxAmount = loanAmount + down - fee;
+      payment = desiredPmt;
+    }
 
     // Generate amortization schedule
     const schedule: AmortizationRow[] = [];
-    let balance = principal;
+    let balance = loanAmount;
+    const basePayment = calculationMode === 'payment' ? payment - (monthlyInsurance * (12 / paymentsPerYear)) : payment - (monthlyInsurance * (12 / paymentsPerYear));
 
-    for (let i = 1; i <= months; i++) {
-      const interestPayment = balance * monthlyRate;
-      const principalPayment = monthlyPayment - interestPayment;
+    for (let i = 1; i <= totalPeriods; i++) {
+      const interestPayment = balance * periodRate;
+      const principalPayment = basePayment - interestPayment;
       balance -= principalPayment;
 
       schedule.push({
-        month: i,
-        payment: monthlyPayment,
+        period: i,
+        payment: basePayment + (monthlyInsurance * (12 / paymentsPerYear)),
         principal: principalPayment,
         interest: interestPayment,
         balance: Math.max(0, balance),
       });
     }
 
+    // Calculate totals
+    const totalPayments = payment * totalPeriods;
+    const totalInterest = totalPayments - loanAmount - (monthlyInsurance * (12 / paymentsPerYear) * totalPeriods);
+
     setResults({
-      monthlyPayment,
+      payment,
       totalInterest,
-      totalAmount,
+      totalAmount: totalPayments,
+      maxLoanAmount: calculatedMaxAmount,
       schedule,
     });
   };
@@ -107,22 +211,68 @@ export default function CreditCalculator({ dict }: CreditCalculatorProps) {
   return (
     <div className="w-full">
       <div className="card p-6 sm:p-8">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              {dict.amount}
+        {/* Calculation Mode */}
+        <div className="mb-6">
+          <label className="block text-sm font-medium text-gray-700 mb-3">
+            {dict.calculationMode}
+          </label>
+          <div className="flex gap-4">
+            <label className="flex items-center cursor-pointer">
+              <input
+                type="radio"
+                checked={calculationMode === 'payment'}
+                onChange={() => setCalculationMode('payment')}
+                className="w-4 h-4 text-primary-600 focus:ring-primary-500"
+              />
+              <span className="ml-2 text-gray-700">{dict.calculatePayment}</span>
             </label>
-            <input
-              type="number"
-              value={amount}
-              onChange={(e) => setAmount(e.target.value)}
-              placeholder={dict.amountPlaceholder}
-              className="input-field"
-              min="0"
-              step="1000"
-            />
+            <label className="flex items-center cursor-pointer">
+              <input
+                type="radio"
+                checked={calculationMode === 'maxAmount'}
+                onChange={() => setCalculationMode('maxAmount')}
+                className="w-4 h-4 text-primary-600 focus:ring-primary-500"
+              />
+              <span className="ml-2 text-gray-700">{dict.calculateMaxAmount}</span>
+            </label>
           </div>
+        </div>
 
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {/* Loan Amount or Desired Payment */}
+          {calculationMode === 'payment' ? (
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                {dict.amount}
+              </label>
+              <input
+                type="number"
+                value={amount}
+                onChange={(e) => setAmount(e.target.value)}
+                placeholder={dict.amountPlaceholder}
+                className="input-field"
+                min="0"
+                step="1000"
+              />
+            </div>
+          ) : (
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                {dict.payment}
+              </label>
+              <input
+                type="number"
+                value={desiredPayment}
+                onChange={(e) => setDesiredPayment(e.target.value)}
+                placeholder={dict.amountPlaceholder}
+                className="input-field"
+                min="0"
+                step="100"
+              />
+            </div>
+          )}
+
+          {/* Interest Rate */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
               {dict.rate}
@@ -138,20 +288,114 @@ export default function CreditCalculator({ dict }: CreditCalculatorProps) {
             />
           </div>
 
+          {/* Loan Term with Unit Selector */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
               {dict.term}
             </label>
-            <input
-              type="number"
-              value={term}
-              onChange={(e) => setTerm(e.target.value)}
-              placeholder={dict.termPlaceholder}
-              className="input-field"
-              min="1"
-              step="1"
-            />
+            <div className="flex gap-2">
+              <input
+                type="number"
+                value={term}
+                onChange={(e) => setTerm(e.target.value)}
+                placeholder={dict.termPlaceholder}
+                className="input-field flex-1"
+                min="1"
+                step="1"
+              />
+              <select
+                value={termUnit}
+                onChange={(e) => setTermUnit(e.target.value as TermUnit)}
+                className="input-field w-32"
+              >
+                <option value="months">{dict.termMonths}</option>
+                <option value="years">{dict.termYears}</option>
+              </select>
+            </div>
           </div>
+
+          {/* Payment Frequency */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              {dict.frequency}
+            </label>
+            <select
+              value={frequency}
+              onChange={(e) => setFrequency(e.target.value as PaymentFrequency)}
+              className="input-field"
+            >
+              <option value="monthly">{dict.monthly}</option>
+              <option value="biweekly">{dict.biweekly}</option>
+              <option value="weekly">{dict.weekly}</option>
+            </select>
+          </div>
+        </div>
+
+        {/* Advanced Options Accordion */}
+        <div className="mt-6">
+          <button
+            onClick={() => setShowAdvanced(!showAdvanced)}
+            className="flex items-center gap-2 text-primary-600 hover:text-primary-700 font-medium"
+          >
+            <svg
+              className={`w-5 h-5 transition-transform ${showAdvanced ? 'rotate-90' : ''}`}
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+            </svg>
+            {dict.advancedOptions}
+          </button>
+
+          {showAdvanced && (
+            <div className="mt-4 grid grid-cols-1 md:grid-cols-3 gap-6 p-4 bg-gray-50 rounded-lg">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  {dict.downPayment}
+                </label>
+                <input
+                  type="number"
+                  value={downPayment}
+                  onChange={(e) => setDownPayment(e.target.value)}
+                  placeholder={dict.downPaymentPlaceholder}
+                  className="input-field"
+                  min="0"
+                  step="1000"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  {dict.originationFee}
+                </label>
+                <input
+                  type="number"
+                  value={originationFee}
+                  onChange={(e) => setOriginationFee(e.target.value)}
+                  placeholder={dict.originationFeePlaceholder}
+                  className="input-field"
+                  min="0"
+                  step="100"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  {dict.insurance}
+                </label>
+                <input
+                  type="number"
+                  value={insurance}
+                  onChange={(e) => setInsurance(e.target.value)}
+                  placeholder={dict.insurancePlaceholder}
+                  className="input-field"
+                  min="0"
+                  step="10"
+                />
+              </div>
+            </div>
+          )}
         </div>
 
         <div className="mt-6">
@@ -166,12 +410,21 @@ export default function CreditCalculator({ dict }: CreditCalculatorProps) {
           <div className="card p-6 sm:p-8">
             <h3 className="text-2xl font-bold text-gray-800 mb-6">{dict.results}</h3>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <div className="text-center p-4 bg-gradient-to-br from-primary-50 to-primary-100 rounded-xl">
-                <p className="text-sm text-gray-600 mb-2">{dict.monthlyPayment}</p>
-                <p className="text-3xl font-bold text-primary-700">
-                  {formatCurrency(results.monthlyPayment)}
-                </p>
-              </div>
+              {calculationMode === 'payment' ? (
+                <div className="text-center p-4 bg-gradient-to-br from-primary-50 to-primary-100 rounded-xl">
+                  <p className="text-sm text-gray-600 mb-2">{dict.payment}</p>
+                  <p className="text-3xl font-bold text-primary-700">
+                    {formatCurrency(results.payment)}
+                  </p>
+                </div>
+              ) : (
+                <div className="text-center p-4 bg-gradient-to-br from-primary-50 to-primary-100 rounded-xl">
+                  <p className="text-sm text-gray-600 mb-2">{dict.maxLoanAmount}</p>
+                  <p className="text-3xl font-bold text-primary-700">
+                    {formatCurrency(results.maxLoanAmount || 0)}
+                  </p>
+                </div>
+              )}
 
               <div className="text-center p-4 bg-gradient-to-br from-amber-50 to-amber-100 rounded-xl">
                 <p className="text-sm text-gray-600 mb-2">{dict.totalInterest}</p>
@@ -206,7 +459,7 @@ export default function CreditCalculator({ dict }: CreditCalculatorProps) {
                   <thead className="bg-gray-50">
                     <tr>
                       <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        {dict.month}
+                        {dict.period}
                       </th>
                       <th className="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
                         {dict.payment}
@@ -224,9 +477,9 @@ export default function CreditCalculator({ dict }: CreditCalculatorProps) {
                   </thead>
                   <tbody className="bg-white divide-y divide-gray-200">
                     {results.schedule.map((row) => (
-                      <tr key={row.month} className="hover:bg-gray-50">
+                      <tr key={row.period} className="hover:bg-gray-50">
                         <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-900">
-                          {row.month}
+                          {row.period}
                         </td>
                         <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-900 text-right">
                           {formatCurrency(row.payment)}
