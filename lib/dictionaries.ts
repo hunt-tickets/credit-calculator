@@ -10,7 +10,14 @@ const dictionaries = {
     hero: {
       title: 'Credit Calculator',
       subtitle: 'Calculate your loan payments instantly and plan your finances with confidence',
-      description: 'Use this free online credit calculator to simulate your monthly payment, total cost, and complete amortization table for mortgages, personal loans, and auto loans.',
+      description: 'Free online tool to simulate personal loans, mortgages, and credits with detailed amortization tables.',
+    },
+    howToUse: {
+      title: 'How to Use This Credit Calculator',
+      step1: 'Enter the loan amount you want to borrow',
+      step2: 'Input the annual interest rate',
+      step3: 'Select the loan term in months',
+      step4: 'Click "Calculate Payment" to see your monthly payment',
     },
     calculator: {
       amount: 'Loan Amount',
@@ -49,7 +56,7 @@ const dictionaries = {
       },
       accurate: {
         title: 'Accurate Calculations',
-        description: 'Precise financial calculations using standard loan formulas.',
+        description: 'Calculations based on standard loan amortization formulas.',
       },
     },
     faq: {
@@ -60,7 +67,7 @@ const dictionaries = {
       },
       q2: {
         question: 'What types of loans can I calculate?',
-        answer: 'You can use this calculator for any type of loan including mortgages, auto loans, personal loans, student loans, and business loans. The calculator works for any loan with fixed monthly payments.',
+        answer: 'This credit calculator works as a personal loan simulator with fixed monthly payments. You can use it for mortgages, auto loans, personal loans, student loans, and business loans. The loan payment calculator is ideal for any credit with fixed installments.',
       },
       q3: {
         question: 'What is an amortization schedule?',
@@ -85,7 +92,14 @@ const dictionaries = {
     hero: {
       title: 'Calculadora de Crédito',
       subtitle: 'Calcula tus pagos de préstamo al instante y planifica tus finanzas con confianza',
-      description: 'Usa esta calculadora de crédito online para simular la cuota mensual de tu préstamo, el costo total y la tabla de amortización completa para hipotecas, préstamos personales y préstamos de auto.',
+      description: 'Herramienta gratuita en línea para simular préstamos personales, créditos e hipotecas con tablas de amortización detalladas.',
+    },
+    howToUse: {
+      title: '¿Cómo usar esta calculadora de crédito?',
+      step1: 'Ingresa el monto del préstamo que deseas solicitar',
+      step2: 'Escribe la tasa de interés anual',
+      step3: 'Selecciona el plazo en meses',
+      step4: 'Haz clic en "Calcular Pago" para ver tu cuota mensual',
     },
     calculator: {
       amount: 'Monto del Préstamo',
@@ -124,7 +138,7 @@ const dictionaries = {
       },
       accurate: {
         title: 'Cálculos Precisos',
-        description: 'Cálculos financieros precisos utilizando fórmulas estándar de préstamos.',
+        description: 'Cálculos basados en fórmulas estándar de amortización de préstamos.',
       },
     },
     faq: {
@@ -135,7 +149,7 @@ const dictionaries = {
       },
       q2: {
         question: '¿Qué tipos de préstamos puedo calcular?',
-        answer: 'Puedes usar esta calculadora para cualquier tipo de préstamo incluyendo hipotecas, préstamos de auto, préstamos personales, préstamos estudiantiles y préstamos comerciales. La calculadora funciona para cualquier préstamo con pagos mensuales fijos.',
+        answer: 'Esta calculadora de crédito funciona como un simulador de préstamos personales con cuotas mensuales fijas. Puedes usarla para hipotecas, préstamos de auto, préstamos personales, préstamos estudiantiles y créditos comerciales. La calculadora de préstamos es ideal para cualquier crédito con pagos fijos.',
       },
       q3: {
         question: '¿Qué es una tabla de amortización?',

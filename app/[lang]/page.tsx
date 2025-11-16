@@ -61,6 +61,49 @@ export default async function Page({ params }: { params: Promise<{ lang: string 
         <CreditCalculator dict={dict.calculator} />
       </section>
 
+      {/* How to Use Section */}
+      <section className="container-custom py-16">
+        <div className="max-w-3xl mx-auto">
+          <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 text-center mb-12">
+            {dict.howToUse.title}
+          </h2>
+          <div className="space-y-6">
+            <div className="flex gap-4 items-start">
+              <div className="flex-shrink-0 w-10 h-10 bg-primary-600 text-white rounded-full flex items-center justify-center font-bold">
+                1
+              </div>
+              <div className="flex-1">
+                <p className="text-lg text-gray-700">{dict.howToUse.step1}</p>
+              </div>
+            </div>
+            <div className="flex gap-4 items-start">
+              <div className="flex-shrink-0 w-10 h-10 bg-primary-600 text-white rounded-full flex items-center justify-center font-bold">
+                2
+              </div>
+              <div className="flex-1">
+                <p className="text-lg text-gray-700">{dict.howToUse.step2}</p>
+              </div>
+            </div>
+            <div className="flex gap-4 items-start">
+              <div className="flex-shrink-0 w-10 h-10 bg-primary-600 text-white rounded-full flex items-center justify-center font-bold">
+                3
+              </div>
+              <div className="flex-1">
+                <p className="text-lg text-gray-700">{dict.howToUse.step3}</p>
+              </div>
+            </div>
+            <div className="flex gap-4 items-start">
+              <div className="flex-shrink-0 w-10 h-10 bg-primary-600 text-white rounded-full flex items-center justify-center font-bold">
+                4
+              </div>
+              <div className="flex-1">
+                <p className="text-lg text-gray-700">{dict.howToUse.step4}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Features Section */}
       <section className="container-custom py-16">
         <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 text-center mb-12">
