@@ -99,15 +99,34 @@ function Tooltip({ text }: { text: string }) {
         onMouseLeave={() => setShow(false)}
         onFocus={() => setShow(true)}
         onBlur={() => setShow(false)}
-        className="inline-flex items-center justify-center w-4 h-4 text-xs font-bold text-white bg-gray-400 hover:bg-gray-500 rounded-full cursor-help transition-colors"
+        onClick={(e) => {
+          e.preventDefault();
+          setShow(!show);
+        }}
+        className="inline-flex items-center justify-center w-5 h-5 text-xs font-bold text-white bg-gray-400 hover:bg-gray-500 rounded-full cursor-help transition-colors"
         aria-label="More information"
       >
         ?
       </button>
       {show && (
-        <div className="absolute z-50 w-64 p-3 text-sm text-gray-700 bg-white border border-gray-200 rounded-lg shadow-lg left-0 bottom-6 sm:left-auto sm:right-0">
-          {text}
-        </div>
+        <>
+          {/* Backdrop for mobile to close tooltip */}
+          <div
+            className="fixed inset-0 z-40 sm:hidden"
+            onClick={() => setShow(false)}
+          />
+          {/* Tooltip content */}
+          <div className="absolute z-50 w-72 sm:w-64 p-3 sm:p-4 text-sm text-gray-700 bg-white border-2 border-gray-300 rounded-lg shadow-xl bottom-7 left-1/2 -translate-x-1/2 sm:left-auto sm:right-0 sm:translate-x-0">
+            <button
+              onClick={() => setShow(false)}
+              className="absolute top-1 right-1 sm:hidden w-6 h-6 flex items-center justify-center text-gray-400 hover:text-gray-600"
+              aria-label="Close"
+            >
+              ✕
+            </button>
+            <p className="pr-6 sm:pr-0">{text}</p>
+          </div>
+        </>
       )}
     </div>
   );
@@ -466,7 +485,7 @@ export default function CreditCalculator({ dict }: CreditCalculatorProps) {
           <select
             value={currency}
             onChange={(e) => setCurrency(e.target.value as CurrencyCode)}
-            className="input-field max-w-xs"
+            className="input-field w-full sm:max-w-xs"
           >
             {Object.entries(CURRENCIES).map(([code, { symbol, name }]) => (
               <option key={code} value={code}>
@@ -720,43 +739,43 @@ export default function CreditCalculator({ dict }: CreditCalculatorProps) {
       {results && (
         <div className="mt-6 sm:mt-8 space-y-4 sm:space-y-6">
           {/* Premium Results Summary Panel */}
-          <div className="card p-6 sm:p-8 bg-gradient-to-br from-primary-50 via-white to-primary-50">
-            <h3 className="text-2xl sm:text-3xl font-bold text-gray-800 mb-6">{dict.summary}</h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+          <div className="card p-4 sm:p-6 lg:p-8 bg-gradient-to-br from-primary-50 via-white to-primary-50">
+            <h3 className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-800 mb-4 sm:mb-6">{dict.summary}</h3>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 lg:gap-6">
               {calculationMode === 'payment' ? (
-                <div className="text-center p-5 bg-white border-2 border-primary-200 rounded-xl shadow-sm">
-                  <p className="text-sm font-medium text-gray-600 mb-2">{dict.payment}</p>
-                  <p className="text-3xl sm:text-4xl font-bold text-primary-700">
+                <div className="text-center p-4 sm:p-5 bg-white border-2 border-primary-200 rounded-xl shadow-sm">
+                  <p className="text-xs sm:text-sm font-medium text-gray-600 mb-1 sm:mb-2">{dict.payment}</p>
+                  <p className="text-2xl sm:text-3xl lg:text-4xl font-bold text-primary-700 break-all">
                     {formatCurrency(results.payment)}
                   </p>
                 </div>
               ) : (
-                <div className="text-center p-5 bg-white border-2 border-primary-200 rounded-xl shadow-sm">
-                  <p className="text-sm font-medium text-gray-600 mb-2">{dict.maxLoanAmount}</p>
-                  <p className="text-3xl sm:text-4xl font-bold text-primary-700">
+                <div className="text-center p-4 sm:p-5 bg-white border-2 border-primary-200 rounded-xl shadow-sm">
+                  <p className="text-xs sm:text-sm font-medium text-gray-600 mb-1 sm:mb-2">{dict.maxLoanAmount}</p>
+                  <p className="text-2xl sm:text-3xl lg:text-4xl font-bold text-primary-700 break-all">
                     {formatCurrency(results.maxLoanAmount || 0)}
                   </p>
                 </div>
               )}
 
-              <div className="text-center p-5 bg-white border-2 border-amber-200 rounded-xl shadow-sm">
-                <p className="text-sm font-medium text-gray-600 mb-2">{dict.totalInterest}</p>
-                <p className="text-3xl sm:text-4xl font-bold text-amber-700">
+              <div className="text-center p-4 sm:p-5 bg-white border-2 border-amber-200 rounded-xl shadow-sm">
+                <p className="text-xs sm:text-sm font-medium text-gray-600 mb-1 sm:mb-2">{dict.totalInterest}</p>
+                <p className="text-2xl sm:text-3xl lg:text-4xl font-bold text-amber-700 break-all">
                   {formatCurrency(results.totalInterest)}
                 </p>
               </div>
 
-              <div className="text-center p-5 bg-white border-2 border-emerald-200 rounded-xl shadow-sm">
-                <p className="text-sm font-medium text-gray-600 mb-2">{dict.totalPaid}</p>
-                <p className="text-3xl sm:text-4xl font-bold text-emerald-700">
+              <div className="text-center p-4 sm:p-5 bg-white border-2 border-emerald-200 rounded-xl shadow-sm">
+                <p className="text-xs sm:text-sm font-medium text-gray-600 mb-1 sm:mb-2">{dict.totalPaid}</p>
+                <p className="text-2xl sm:text-3xl lg:text-4xl font-bold text-emerald-700 break-all">
                   {formatCurrency(results.totalAmount)}
                 </p>
               </div>
 
               {results.effectiveRate && (
-                <div className="text-center p-5 bg-white border-2 border-purple-200 rounded-xl shadow-sm">
-                  <p className="text-sm font-medium text-gray-600 mb-2">{dict.effectiveRate}</p>
-                  <p className="text-3xl sm:text-4xl font-bold text-purple-700">
+                <div className="text-center p-4 sm:p-5 bg-white border-2 border-purple-200 rounded-xl shadow-sm sm:col-span-2 lg:col-span-1">
+                  <p className="text-xs sm:text-sm font-medium text-gray-600 mb-1 sm:mb-2">{dict.effectiveRate}</p>
+                  <p className="text-2xl sm:text-3xl lg:text-4xl font-bold text-purple-700">
                     {results.effectiveRate.toFixed(2)}%
                   </p>
                 </div>
@@ -794,30 +813,30 @@ export default function CreditCalculator({ dict }: CreditCalculatorProps) {
           </div>
 
           <div className="card p-4 sm:p-6 lg:p-8">
-            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-4">
+            <div className="flex flex-col gap-3 sm:gap-4 mb-4">
               <h3 className="text-xl sm:text-2xl font-bold text-gray-800">{dict.amortization}</h3>
-              <div className="flex flex-wrap items-center gap-2 -ml-2 sm:ml-0">
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 sm:gap-3">
                 <button
                   onClick={downloadCSV}
-                  className="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-medium text-sm rounded-lg transition-colors flex items-center gap-2 touch-manipulation"
+                  className="px-4 py-3 sm:py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-medium text-sm rounded-lg transition-colors flex items-center justify-center gap-2 touch-manipulation"
                 >
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                   </svg>
-                  {dict.downloadCSV}
+                  <span className="truncate">{dict.downloadCSV}</span>
                 </button>
                 <button
                   onClick={downloadPDF}
-                  className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white font-medium text-sm rounded-lg transition-colors flex items-center gap-2 touch-manipulation"
+                  className="px-4 py-3 sm:py-2 bg-red-600 hover:bg-red-700 text-white font-medium text-sm rounded-lg transition-colors flex items-center justify-center gap-2 touch-manipulation"
                 >
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
                   </svg>
-                  {dict.downloadPDF}
+                  <span className="truncate">{dict.downloadPDF}</span>
                 </button>
                 <button
                   onClick={() => setShowSchedule(!showSchedule)}
-                  className="px-4 py-2 text-primary-600 hover:text-primary-700 font-medium text-sm hover:bg-primary-50 rounded-lg transition-colors touch-manipulation"
+                  className="px-4 py-3 sm:py-2 text-primary-600 hover:text-primary-700 font-medium text-sm bg-primary-50 hover:bg-primary-100 rounded-lg transition-colors touch-manipulation sm:col-span-3 lg:col-span-1"
                 >
                   {showSchedule ? dict.hideSchedule : dict.showSchedule}
                 </button>
@@ -825,50 +844,52 @@ export default function CreditCalculator({ dict }: CreditCalculatorProps) {
             </div>
 
             {showSchedule && (
-              <div className="overflow-x-auto -mx-4 sm:mx-0">
+              <div className="overflow-x-auto -mx-4 sm:mx-0 rounded-lg border border-gray-200">
                 <div className="inline-block min-w-full align-middle">
-                  <table className="min-w-full divide-y divide-gray-200">
-                    <thead className="bg-gray-50">
-                      <tr>
-                        <th className="px-3 sm:px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider sticky left-0 bg-gray-50">
-                          {dict.period}
-                        </th>
-                        <th className="px-3 sm:px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
-                          {dict.payment}
-                        </th>
-                        <th className="px-3 sm:px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
-                          {dict.principal}
-                        </th>
-                        <th className="px-3 sm:px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
-                          {dict.interest}
-                        </th>
-                        <th className="px-3 sm:px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
-                          {dict.balance}
-                        </th>
-                      </tr>
-                    </thead>
-                    <tbody className="bg-white divide-y divide-gray-200">
-                      {results.schedule.map((row) => (
-                        <tr key={row.period} className="hover:bg-gray-50">
-                          <td className="px-3 sm:px-4 py-3 whitespace-nowrap text-xs sm:text-sm text-gray-900 font-medium sticky left-0 bg-white">
-                            {row.period}
-                          </td>
-                          <td className="px-3 sm:px-4 py-3 whitespace-nowrap text-xs sm:text-sm text-gray-900 text-right">
-                            {formatCurrency(row.payment)}
-                          </td>
-                          <td className="px-3 sm:px-4 py-3 whitespace-nowrap text-xs sm:text-sm text-gray-900 text-right">
-                            {formatCurrency(row.principal)}
-                          </td>
-                          <td className="px-3 sm:px-4 py-3 whitespace-nowrap text-xs sm:text-sm text-gray-900 text-right">
-                            {formatCurrency(row.interest)}
-                          </td>
-                          <td className="px-3 sm:px-4 py-3 whitespace-nowrap text-xs sm:text-sm text-gray-900 text-right">
-                            {formatCurrency(row.balance)}
-                          </td>
+                  <div className="overflow-hidden">
+                    <table className="min-w-full divide-y divide-gray-200">
+                      <thead className="bg-gray-50">
+                        <tr>
+                          <th className="px-2 sm:px-3 lg:px-4 py-2 sm:py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider sticky left-0 bg-gray-50 z-10">
+                            {dict.period}
+                          </th>
+                          <th className="px-2 sm:px-3 lg:px-4 py-2 sm:py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            {dict.payment}
+                          </th>
+                          <th className="px-2 sm:px-3 lg:px-4 py-2 sm:py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            {dict.principal}
+                          </th>
+                          <th className="px-2 sm:px-3 lg:px-4 py-2 sm:py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            {dict.interest}
+                          </th>
+                          <th className="px-2 sm:px-3 lg:px-4 py-2 sm:py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            {dict.balance}
+                          </th>
                         </tr>
-                      ))}
-                    </tbody>
-                  </table>
+                      </thead>
+                      <tbody className="bg-white divide-y divide-gray-200">
+                        {results.schedule.map((row) => (
+                          <tr key={row.period} className="hover:bg-gray-50 transition-colors">
+                            <td className="px-2 sm:px-3 lg:px-4 py-2 sm:py-3 whitespace-nowrap text-xs sm:text-sm text-gray-900 font-medium sticky left-0 bg-white z-10">
+                              {row.period}
+                            </td>
+                            <td className="px-2 sm:px-3 lg:px-4 py-2 sm:py-3 whitespace-nowrap text-xs sm:text-sm text-gray-900 text-right">
+                              {formatCurrency(row.payment)}
+                            </td>
+                            <td className="px-2 sm:px-3 lg:px-4 py-2 sm:py-3 whitespace-nowrap text-xs sm:text-sm text-gray-900 text-right">
+                              {formatCurrency(row.principal)}
+                            </td>
+                            <td className="px-2 sm:px-3 lg:px-4 py-2 sm:py-3 whitespace-nowrap text-xs sm:text-sm text-gray-900 text-right">
+                              {formatCurrency(row.interest)}
+                            </td>
+                            <td className="px-2 sm:px-3 lg:px-4 py-2 sm:py-3 whitespace-nowrap text-xs sm:text-sm text-gray-900 text-right">
+                              {formatCurrency(row.balance)}
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
                 </div>
               </div>
             )}
