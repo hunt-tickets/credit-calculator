@@ -78,15 +78,67 @@ export default function CreditCalculator({ dict }: CreditCalculatorProps) {
   } | null>(null);
   const [showSchedule, setShowSchedule] = useState(false);
 
+  // Format number with thousands separator
+  const formatNumberWithThousands = (value: string): string => {
+    // Remove all non-digit and non-decimal characters
+    const cleaned = value.replace(/[^\d.]/g, '');
+
+    // Split by decimal point
+    const parts = cleaned.split('.');
+
+    // Format the integer part with thousands separator
+    parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+
+    // Return formatted number (keep only first decimal part if exists)
+    return parts.length > 1 ? parts[0] + '.' + parts.slice(1).join('').slice(0, 2) : parts[0];
+  };
+
+  // Parse formatted number to float
+  const parseFormattedNumber = (value: string): number => {
+    // Remove thousands separators (dots) but keep decimal point
+    // We'll treat the last dot as decimal if there are multiple
+    const parts = value.split('.');
+    if (parts.length <= 1) {
+      return parseFloat(value) || 0;
+    }
+    // Join all parts except the last with '' (removing thousand separators)
+    // The last part is the decimal part if it has 1-2 digits, otherwise it's also thousands
+    const lastPart = parts[parts.length - 1];
+    if (lastPart.length <= 2 && parts.length > 1) {
+      // Last part is decimal
+      const integerPart = parts.slice(0, -1).join('');
+      return parseFloat(integerPart + '.' + lastPart) || 0;
+    } else {
+      // All dots are thousands separators
+      return parseFloat(parts.join('')) || 0;
+    }
+  };
+
+  // Handle formatted input change
+  const handleFormattedInputChange = (
+    value: string,
+    setter: (value: string) => void
+  ) => {
+    // Allow empty value
+    if (value === '') {
+      setter('');
+      return;
+    }
+
+    // Format and set the value
+    const formatted = formatNumberWithThousands(value);
+    setter(formatted);
+  };
+
   const calculateLoan = () => {
     // Parse inputs
-    let loanAmount = parseFloat(amount);
-    const desiredPmt = parseFloat(desiredPayment);
+    let loanAmount = parseFormattedNumber(amount);
+    const desiredPmt = parseFormattedNumber(desiredPayment);
     const annualRate = parseFloat(rate);
     let termValue = parseInt(term);
-    const down = parseFloat(downPayment) || 0;
-    const fee = parseFloat(originationFee) || 0;
-    const monthlyInsurance = parseFloat(insurance) || 0;
+    const down = parseFormattedNumber(downPayment);
+    const fee = parseFormattedNumber(originationFee);
+    const monthlyInsurance = parseFormattedNumber(insurance);
 
     // Validate basic inputs
     if (isNaN(annualRate) || annualRate < 0 || isNaN(termValue) || termValue <= 0) {
@@ -246,14 +298,14 @@ export default function CreditCalculator({ dict }: CreditCalculatorProps) {
                 {dict.amount}
               </label>
               <div className="relative">
-                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 font-medium">$</span>
+                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 font-medium pointer-events-none">$</span>
                 <input
                   type="text"
                   inputMode="decimal"
                   value={amount}
-                  onChange={(e) => setAmount(e.target.value)}
+                  onChange={(e) => handleFormattedInputChange(e.target.value, setAmount)}
                   placeholder={dict.amountPlaceholder}
-                  className="input-field pl-8"
+                  className="input-field pl-10"
                 />
               </div>
             </div>
@@ -263,14 +315,14 @@ export default function CreditCalculator({ dict }: CreditCalculatorProps) {
                 {dict.payment}
               </label>
               <div className="relative">
-                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 font-medium">$</span>
+                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 font-medium pointer-events-none">$</span>
                 <input
                   type="text"
                   inputMode="decimal"
                   value={desiredPayment}
-                  onChange={(e) => setDesiredPayment(e.target.value)}
+                  onChange={(e) => handleFormattedInputChange(e.target.value, setDesiredPayment)}
                   placeholder={dict.amountPlaceholder}
-                  className="input-field pl-8"
+                  className="input-field pl-10"
                 />
               </div>
             </div>
@@ -364,14 +416,14 @@ export default function CreditCalculator({ dict }: CreditCalculatorProps) {
                   {dict.downPayment}
                 </label>
                 <div className="relative">
-                  <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 font-medium">$</span>
+                  <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 font-medium pointer-events-none">$</span>
                   <input
                     type="text"
                     inputMode="decimal"
                     value={downPayment}
-                    onChange={(e) => setDownPayment(e.target.value)}
+                    onChange={(e) => handleFormattedInputChange(e.target.value, setDownPayment)}
                     placeholder={dict.downPaymentPlaceholder}
-                    className="input-field pl-8"
+                    className="input-field pl-10"
                   />
                 </div>
               </div>
@@ -381,14 +433,14 @@ export default function CreditCalculator({ dict }: CreditCalculatorProps) {
                   {dict.originationFee}
                 </label>
                 <div className="relative">
-                  <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 font-medium">$</span>
+                  <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 font-medium pointer-events-none">$</span>
                   <input
                     type="text"
                     inputMode="decimal"
                     value={originationFee}
-                    onChange={(e) => setOriginationFee(e.target.value)}
+                    onChange={(e) => handleFormattedInputChange(e.target.value, setOriginationFee)}
                     placeholder={dict.originationFeePlaceholder}
-                    className="input-field pl-8"
+                    className="input-field pl-10"
                   />
                 </div>
               </div>
@@ -398,14 +450,14 @@ export default function CreditCalculator({ dict }: CreditCalculatorProps) {
                   {dict.insurance}
                 </label>
                 <div className="relative">
-                  <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 font-medium">$</span>
+                  <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 font-medium pointer-events-none">$</span>
                   <input
                     type="text"
                     inputMode="decimal"
                     value={insurance}
-                    onChange={(e) => setInsurance(e.target.value)}
+                    onChange={(e) => handleFormattedInputChange(e.target.value, setInsurance)}
                     placeholder={dict.insurancePlaceholder}
-                    className="input-field pl-8"
+                    className="input-field pl-10"
                   />
                 </div>
               </div>
