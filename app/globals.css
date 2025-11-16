@@ -83,6 +83,23 @@ body {
   --tw-ring-color: rgb(186 230 253);
 }
 
+/* Input with currency symbol */
+.input-with-symbol {
+  padding-left: 2.5rem !important;
+}
+
+.input-with-symbol::placeholder {
+  padding-left: 0;
+}
+
+.input-with-symbol-right {
+  padding-right: 2.5rem !important;
+}
+
+.input-with-symbol-right::placeholder {
+  padding-right: 0;
+}
+
 .btn-primary {
   width: 100%;
   background: linear-gradient(to right, var(--color-primary-600), var(--color-primary-700));
