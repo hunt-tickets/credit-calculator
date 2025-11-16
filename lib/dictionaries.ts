@@ -10,7 +10,7 @@ const dictionaries = {
     hero: {
       title: 'Credit Calculator',
       subtitle: 'Calculate your loan payments instantly and plan your finances with confidence',
-      description: 'Free online tool to simulate loans, mortgages, and credits with detailed amortization schedules.',
+      description: 'Use this free online credit calculator to simulate your monthly payment, total cost, and complete amortization table for mortgages, personal loans, and auto loans.',
     },
     calculator: {
       amount: 'Loan Amount',
@@ -85,7 +85,7 @@ const dictionaries = {
     hero: {
       title: 'Calculadora de Crédito',
       subtitle: 'Calcula tus pagos de préstamo al instante y planifica tus finanzas con confianza',
-      description: 'Herramienta gratuita en línea para simular préstamos, hipotecas y créditos con tablas de amortización detalladas.',
+      description: 'Usa esta calculadora de crédito online para simular la cuota mensual de tu préstamo, el costo total y la tabla de amortización completa para hipotecas, préstamos personales y préstamos de auto.',
     },
     calculator: {
       amount: 'Monto del Préstamo',
