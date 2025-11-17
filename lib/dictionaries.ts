@@ -105,6 +105,26 @@ const dictionaries = {
         content: 'This loan calculator is perfect for anyone considering taking out a loan or credit. Homebuyers can use it as a mortgage calculator to estimate monthly payments for home loans. Car shoppers can calculate auto loan payments and compare different financing options. Small business owners can estimate business loan costs. Students can plan student loan repayment strategies. Personal loan applicants can compare offers from different lenders. Financial advisors can use it to demonstrate loan scenarios to clients. The calculator works for any fixed-rate installment loan, making it a versatile personal loan simulator for various credit needs.',
       },
     },
+    relatedCalculators: {
+      title: 'Specialized Loan Calculators',
+      description: 'Explore our specialized calculators designed for specific types of loans',
+      mortgage: {
+        title: 'Mortgage Calculator',
+        description: 'Calculate home loan payments with detailed amortization for 15-year and 30-year mortgages',
+      },
+      auto: {
+        title: 'Auto Loan Calculator',
+        description: 'Estimate monthly car payments for new and used vehicle financing',
+      },
+      student: {
+        title: 'Student Loan Calculator',
+        description: 'Plan education loan repayment and explore different payment strategies',
+      },
+      debtConsolidation: {
+        title: 'Debt Consolidation Calculator',
+        description: 'Calculate savings from consolidating multiple debts into one loan',
+      },
+    },
     faq: {
       title: 'Frequently Asked Questions',
       q1: {
@@ -231,6 +251,26 @@ const dictionaries = {
       whoCanUse: {
         title: '¿Quién Puede Usar Esta Calculadora de Crédito?',
         content: 'Esta calculadora de préstamos es perfecta para cualquier persona que esté considerando obtener un préstamo o crédito. Los compradores de vivienda pueden usarla como calculadora de hipoteca para estimar pagos mensuales de préstamos hipotecarios. Los compradores de autos pueden calcular pagos de préstamos de auto y comparar diferentes opciones de financiamiento. Los dueños de pequeñas empresas pueden estimar costos de préstamos comerciales. Los estudiantes pueden planificar estrategias de pago de préstamos estudiantiles. Los solicitantes de préstamos personales pueden comparar ofertas de diferentes prestamistas. Los asesores financieros pueden usarla para demostrar escenarios de préstamos a clientes. La calculadora funciona para cualquier préstamo a plazo fijo con tasa de interés fija, convirtiéndola en un simulador de préstamos personales versátil para diversas necesidades crediticias.',
+      },
+    },
+    relatedCalculators: {
+      title: 'Calculadoras de Préstamos Especializadas',
+      description: 'Explora nuestras calculadoras especializadas diseñadas para tipos específicos de préstamos',
+      mortgage: {
+        title: 'Calculadora de Hipoteca',
+        description: 'Calcula pagos de préstamos hipotecarios con amortización detallada para hipotecas a 15 y 30 años',
+      },
+      auto: {
+        title: 'Calculadora de Préstamo de Auto',
+        description: 'Estima pagos mensuales de auto para financiamiento de vehículos nuevos y usados',
+      },
+      student: {
+        title: 'Calculadora de Préstamo Estudiantil',
+        description: 'Planifica el pago de préstamos educativos y explora diferentes estrategias de pago',
+      },
+      debtConsolidation: {
+        title: 'Calculadora de Consolidación de Deudas',
+        description: 'Calcula ahorros al consolidar múltiples deudas en un solo préstamo',
       },
     },
     faq: {

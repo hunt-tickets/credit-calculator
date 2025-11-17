@@ -2,6 +2,15 @@
 
 import { useState, useMemo, useCallback } from 'react';
 
+interface CalculatorDefaults {
+  amount?: string;
+  rate?: string;
+  term?: string;
+  termUnit?: 'months' | 'years';
+  downPayment?: string;
+  currency?: string;
+}
+
 interface CreditCalculatorProps {
   dict: {
     currency: string;
@@ -60,6 +69,7 @@ interface CreditCalculatorProps {
     downloadCSV: string;
     totalPaid: string;
   };
+  defaults?: CalculatorDefaults;
 }
 
 interface AmortizationRow {
@@ -132,19 +142,19 @@ function Tooltip({ text }: { text: string }) {
   );
 }
 
-export default function CreditCalculator({ dict }: CreditCalculatorProps) {
-  const [currency, setCurrency] = useState<CurrencyCode>('USD');
-  const [amount, setAmount] = useState('');
+export default function CreditCalculator({ dict, defaults = {} }: CreditCalculatorProps) {
+  const [currency, setCurrency] = useState<CurrencyCode>((defaults.currency as CurrencyCode) || 'USD');
+  const [amount, setAmount] = useState(defaults.amount || '');
   const [desiredPayment, setDesiredPayment] = useState('');
-  const [rate, setRate] = useState('');
-  const [term, setTerm] = useState('');
-  const [termUnit, setTermUnit] = useState<TermUnit>('months');
+  const [rate, setRate] = useState(defaults.rate || '');
+  const [term, setTerm] = useState(defaults.term || '');
+  const [termUnit, setTermUnit] = useState<TermUnit>(defaults.termUnit || 'months');
   const [frequency, setFrequency] = useState<PaymentFrequency>('monthly');
   const [calculationMode, setCalculationMode] = useState<CalculationMode>('payment');
 
   // Advanced options
   const [showAdvanced, setShowAdvanced] = useState(false);
-  const [downPayment, setDownPayment] = useState('');
+  const [downPayment, setDownPayment] = useState(defaults.downPayment || '');
   const [originationFee, setOriginationFee] = useState('');
   const [insurance, setInsurance] = useState('');
   const [extraPayment, setExtraPayment] = useState('');
