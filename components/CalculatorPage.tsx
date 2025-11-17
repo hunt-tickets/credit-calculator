@@ -25,7 +25,7 @@ export default function CalculatorPage({
   return (
     <>
       {/* Hero Section */}
-      <section className="text-center mb-8 sm:mb-12 px-4">
+      <section className="text-center py-8 sm:py-12 mb-8 sm:mb-12 px-4">
         <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 mb-4">
           {content.hero.title}
         </h1>
